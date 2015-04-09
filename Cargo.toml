@@ -1,0 +1,10 @@
+[package]
+
+name = "bloomfilter-rs"
+version = "0.0.1"
+authors = ["Dave Schwantes <dave.schwantes@gmail.com>"]
+readme = "README.md"
+
+description = """
+A Bloom filter library built to play with Rust.
+"""
