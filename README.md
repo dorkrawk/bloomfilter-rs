@@ -18,5 +18,6 @@ bf.check("oatmeal");
 # TODO
 - [ ] multiple hash functions
 - [ ] error_chance() function
+- [x] handle inserting arbitrary types
 
 *note: I mainly built this project to learn a bit about Rust*

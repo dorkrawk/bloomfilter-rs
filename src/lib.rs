@@ -7,15 +7,21 @@ fn create_correct_size() {
 }
 
 #[test]
-fn insert_and_check() {
+fn insert_and_check_str() {
   let mut bf = BloomFilter::new(10, 1);
-  bf.insert("dave");
-  bf.insert("hamster");
   bf.insert("coffee");
 
-  assert!(bf.check("dave") == true);
-  assert!(bf.check("hamster") == true);
   assert!(bf.check("coffee") == true);
+  assert!(bf.check("pancakes") == false);
+}
+
+#[test]
+fn insert_and_check_other() {
+  let mut bf = BloomFilter::new(10, 1);
+  bf.insert(42);
+
+  assert!(bf.check(42) == true);
+  assert!(bf.check(666) == false);
 }
 
 fn my_hash<T>(obj: T) -> u64
@@ -39,13 +45,17 @@ impl BloomFilter {
     BloomFilter { buckets: buckets, hashes: hashes }
   }
 
-  pub fn insert(&mut self, word: &str) {
+  pub fn insert<T>(&mut self, word: T) 
+      where T:Hash
+  {
     let i:usize = self.bloom_hash(word);
 
     self.buckets[i] = true;
   }
 
-  pub fn check(&mut self, word: &str) -> bool {
+  pub fn check<T>(&mut self, word: T) -> bool 
+      where T: Hash
+  {
     let i:usize = self.bloom_hash(word);
 
     if self.buckets[i] {
@@ -55,7 +65,9 @@ impl BloomFilter {
     }
   }
 
-  fn bloom_hash(&mut self, word: &str) -> usize {
+  fn bloom_hash<T>(&mut self, word: T) -> usize 
+      where T: Hash
+  {
     let the_hash:usize = my_hash(&word) as usize;
     return the_hash % self.buckets.len();
   }
