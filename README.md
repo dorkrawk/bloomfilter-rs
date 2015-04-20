@@ -16,7 +16,7 @@ bf.check("oatmeal");
 ```
 
 # TODO
-- [ ] multiple hash functions
+- [x] multiple hash functions
 - [ ] error_chance() function
 - [x] handle inserting arbitrary types
 
