@@ -3,7 +3,7 @@ A Bloom filter written in Rust.
 
 ## Example
 For a Bloom filter with 100 buckets and 5 hash functions:
-```
+```rust
 let mut bf = BloomFilter::new(100, 5);
 
 bf.insert("hamster");
