@@ -6,13 +6,13 @@ For a Bloom filter with 100 buckets and 5 hash functions:
 ```rust
 let mut bf = BloomFilter::new(100, 5);
 
-bf.insert("hamster");
-bf.insert("coffee");
+bf.insert(&"hamster");
+bf.insert(&"coffee");
 
-bf.check("hamster");
+bf.check(&"hamster");
 // true
 
-bf.check("oatmeal");
+bf.check(&"oatmeal");
 // (probably) false
 ```
 

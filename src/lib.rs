@@ -1,28 +1,5 @@
 use std::hash::{Hash, Hasher, SipHasher};
-
-#[test]
-fn create_correct_size() {
-    let bf = BloomFilter::new(10, 1);
-    assert!(bf.buckets.len() == 10);
-}
-
-#[test]
-fn insert_and_check_str() {
-    let mut bf = BloomFilter::new(100, 2);
-    bf.insert("coffee");
-
-    assert!(bf.check("coffee") == true);
-    assert!(bf.check("pancakes") == false);
-}
-
-#[test]
-fn insert_and_check_other() {
-    let mut bf = BloomFilter::new(100, 2);
-    bf.insert(42);
-
-    assert!(bf.check(42) == true);
-    assert!(bf.check(666) == false);
-}
+//use std::collections::BitVec;
 
 fn my_hash<T>(obj: T, seed: u64) -> u64
     where T: Hash
@@ -35,28 +12,29 @@ fn my_hash<T>(obj: T, seed: u64) -> u64
 }
 
 pub struct BloomFilter {
-    buckets: Vec<bool>,
+    buckets: Vec<bool>, // BitVec,
     hashes: u64,
 }
 
 impl BloomFilter {
     pub fn new(size: usize, hashes: u64) -> BloomFilter {
-        let buckets = vec![false; size];
+        let buckets = vec![false; size]; //BitVec::from_elem(size, false);
 
         BloomFilter { buckets: buckets, hashes: hashes }
     }
 
-    pub fn insert<T>(&mut self, word: T) 
+    pub fn insert<T>(&mut self, word: &T) 
         where T:Hash
     {
         for seed in 0..self.hashes {
             let i: usize = self.bloom_hash(&word, seed);
 
             self.buckets[i] = true;
+            //self.buckets.set(i, true);
         }
     }
 
-    pub fn check<T>(&mut self, word: T) -> bool 
+    pub fn check<T>(&mut self, word: &T) -> bool 
         where T: Hash
     {
         for seed in 0..self.hashes {
@@ -77,4 +55,31 @@ impl BloomFilter {
 
         the_hash % self.buckets.len()
     }
+}
+
+#[test]
+fn create_correct_size() {
+    let bf = BloomFilter::new(10, 1);
+    assert!(bf.buckets.len() == 10);
+}
+
+#[test]
+fn insert_and_check_str() {
+    let mut bf = BloomFilter::new(100, 2);
+    bf.insert(&"coffee");
+
+    assert!(bf.check(&"coffee") == true);
+    assert!(bf.check(&"pancakes") == false);
+}
+
+#[test]
+fn insert_and_check_other() {
+    let mut bf = BloomFilter::new(100, 2);
+    let the_answer = 42;
+    let the_devil = 666;
+
+    bf.insert(&the_answer);
+
+    assert!(bf.check(&the_answer) == true);
+    assert!(bf.check(&the_devil) == false);
 }
