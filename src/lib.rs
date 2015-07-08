@@ -50,6 +50,15 @@ impl BloomFilter {
         true
     }
 
+    pub fn error_chance(&mut self) -> f32 {
+        let numerator =  (self.hashes * self.item_count) as f32;
+        let denominator = self.buckets.len() as f32;
+        let e_exponent =  (-1.0 * numerator) / denominator;
+        let chance: f32 = (1.0 - e_exponent.exp()).powf(self.hashes as f32);
+
+        chance
+    }
+
     fn bloom_hash<T>(&mut self, word: T, seed: u64) -> usize 
         where T: Hash
     {
@@ -98,4 +107,13 @@ fn insert_and_increment_item_count() {
     bf.insert(&"ham");
     
     assert!(bf.item_count == 2);
+}
+
+#[test]
+fn error_chance() {
+    let mut bf = BloomFilter::new(100, 2);
+
+    bf.insert(&"coffee");
+
+    assert!(bf.error_chance().floor() == 0.0);
 }
