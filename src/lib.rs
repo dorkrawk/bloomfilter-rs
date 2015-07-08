@@ -14,13 +14,14 @@ fn my_hash<T>(obj: T, seed: u64) -> u64
 pub struct BloomFilter {
     buckets: Vec<bool>, // BitVec,
     hashes: u64,
+    item_count: u64,
 }
 
 impl BloomFilter {
     pub fn new(size: usize, hashes: u64) -> BloomFilter {
         let buckets = vec![false; size]; //BitVec::from_elem(size, false);
 
-        BloomFilter { buckets: buckets, hashes: hashes }
+        BloomFilter { buckets: buckets, hashes: hashes, item_count: 0 }
     }
 
     pub fn insert<T>(&mut self, word: &T) 
@@ -32,6 +33,7 @@ impl BloomFilter {
             self.buckets[i] = true;
             //self.buckets.set(i, true);
         }
+        self.item_count += 1;
     }
 
     pub fn check<T>(&mut self, word: &T) -> bool 
@@ -82,4 +84,18 @@ fn insert_and_check_other() {
 
     assert!(bf.check(&the_answer) == true);
     assert!(bf.check(&the_devil) == false);
+}
+
+#[test]
+fn insert_and_increment_item_count() {
+    let mut bf = BloomFilter::new(100, 2);
+    assert!(bf.item_count == 0);
+
+    bf.insert(&"coffee");
+
+    assert!(bf.item_count == 1);
+
+    bf.insert(&"ham");
+    
+    assert!(bf.item_count == 2);
 }
