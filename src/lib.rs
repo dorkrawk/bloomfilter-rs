@@ -36,7 +36,7 @@ impl BloomFilter {
         self.item_count += 1;
     }
 
-    pub fn check<T>(&mut self, word: &T) -> bool 
+    pub fn check<T>(&self, word: &T) -> bool 
         where T: Hash
     {
         for seed in 0..self.hashes {
@@ -59,7 +59,7 @@ impl BloomFilter {
         chance
     }
 
-    fn bloom_hash<T>(&mut self, word: T, seed: u64) -> usize 
+    fn bloom_hash<T>(&self, word: T, seed: u64) -> usize 
         where T: Hash
     {
         let the_hash: usize = my_hash(&word, seed) as usize;
