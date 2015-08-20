@@ -50,7 +50,7 @@ impl BloomFilter {
         true
     }
 
-    pub fn error_chance(&mut self) -> f32 {
+    pub fn error_chance(&self) -> f32 {
         let numerator =  (self.hashes * self.item_count) as f32;
         let denominator = self.buckets.len() as f32;
         let e_exponent =  (-1.0 * numerator) / denominator;
